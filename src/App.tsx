@@ -29,6 +29,8 @@ import love19 from "@/assets/love-19.jpeg";
 import love20 from "@/assets/love-20.jpeg";
 import love21 from "@/assets/love-21.jpeg";
 import { Button } from "./components/ui/button";
+import { calculateTimeElapsed } from "./utils/calculate-time-elapsed";
+import { generateHeart, Heart } from "./utils/generate-heart";
 
 const photos = [
   love3,
@@ -52,42 +54,13 @@ const photos = [
   love21,
 ];
 
-interface Heart {
-  id: number;
-  left: string;
-  duration: number;
-}
-
-const generateHeart = (): Heart => ({
-  id: Math.random(),
-  left: Math.random() * 100 + "vw",
-  duration: Math.random() * 3 + 2,
-});
-
-const calculateTimeElapsed = (startDate: Date) => {
-  const now = new Date();
-  let diff = Math.floor((now.getTime() - startDate.getTime()) / 1000);
-
-  const years = Math.floor(diff / (365 * 24 * 60 * 60));
-  diff %= 365 * 24 * 60 * 60;
-  const months = Math.floor(diff / (30 * 24 * 60 * 60));
-  diff %= 30 * 24 * 60 * 60;
-  const days = Math.floor(diff / (24 * 60 * 60));
-  diff %= 24 * 60 * 60;
-  const hours = Math.floor(diff / (60 * 60));
-  diff %= 60 * 60;
-  const minutes = Math.floor(diff / 60);
-  const seconds = diff % 60;
-
-  return { years, months, days, hours, minutes, seconds };
-};
-
 export default function App() {
   const [hearts, setHearts] = useState<Heart[]>([]);
   const [showContent, setShowContent] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(() =>
     calculateTimeElapsed(new Date("2023-09-09T13:30:00-03:00"))
   );
+
   useEffect(() => {
     if (!showContent) return;
     const interval = setInterval(() => {
@@ -155,7 +128,7 @@ export default function App() {
         </div>
 
         {/* Carrossel de Fotos */}
-        <Carousel className="w-full max-w-xs">
+        <Carousel className="max-w-xs items-center flex flex-col w-4/5">
           <CarouselContent>
             {photos.map((photo, index) => (
               <CarouselItem key={index} className="rounded-lg">
@@ -176,7 +149,7 @@ export default function App() {
         <div className="text-center text-2xl font-semibold">
           <h2>Eu te amo há:</h2>
           <p className="text-sm text">
-            {timeElapsed.years} anos, {timeElapsed.months} meses,{" "}
+            {timeElapsed.years} ano, {timeElapsed.months} meses,{" "}
             {timeElapsed.days} dias, {timeElapsed.hours} horas,{" "}
             {timeElapsed.minutes} minutos, {timeElapsed.seconds} segundos
           </p>
